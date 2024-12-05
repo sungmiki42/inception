@@ -1,4 +1,4 @@
-version: '3.9'
+# version: '3.9'
 
 services:
   mariadb:
@@ -18,7 +18,7 @@ services:
       MYSQL_USER: ${DB_USER}
       MYSQL_PASSWORD: ${DB_PASSWORD}
     volumes:
-      - home/sungmiki/data/mariadb:/var/lib/mysql
+      - /home/sungmiki/data/mariadb:/var/lib/mysql
     networks:
       - wp_network
     restart: always
@@ -38,7 +38,7 @@ services:
       WORDPRESS_DB_USER: ${DB_USER}
       WORDPRESS_DB_PASSWORD: ${DB_PASSWORD}
     volumes:
-      - home/sungmiki/data/wordpress:/var/www/html
+      - /home/sungmiki/data/wordpress:/var/www/html
     networks:
       - wp_network
     restart: always
@@ -52,7 +52,7 @@ services:
     depends_on:
       - wordpress
     volumes:
-      - home/sungmiki/data/wordpress:/usr/share/nginx/html
+      - /home/sungmiki/data/wordpress:/usr/share/nginx/html
       # - ./requirements/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
     ports:
       - "8080:8080"
@@ -60,9 +60,9 @@ services:
       - wp_network
     restart: always
 
-volumes:
-  db_data:
-  wp_content:
+# volumes:
+#   db_data:
+#   wp_content:
 
 networks:
   wp_network:

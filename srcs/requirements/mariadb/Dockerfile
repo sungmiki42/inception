@@ -11,7 +11,7 @@ FROM debian:bullseye
 # Update package list and install necessary packages
 RUN apt-get update && \
     apt-get upgrade && \
-    apt-get install -y mariadb-server mariadb-client && \
+    apt-get install -y mariadb-server mariadb-client tini &&\
     apt-get clean
 
 # Copy custom MariaDB configuration if needed (optional)
@@ -32,5 +32,5 @@ EXPOSE 3306
 #     mysql -e "FLUSH PRIVILEGES;"
 
 # Set the entrypoint to run MariaDB in the foreground
-ENTRYPOINT [ "/usr/bin/dumb-init", "--", "init-db.sh" ]
+ENTRYPOINT [ "/usr/bin/tini", "--", "init-db.sh" ]
 CMD ["mysqld", "--bind-address=0.0.0.0"]
