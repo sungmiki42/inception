@@ -11,7 +11,7 @@ services:
       #   DB_NAME: ${DB_NAME}
       #   DB_USER: ${DB_USER}
       #   DB_PASSWORD: ${DB_PASSWORD}
-    image: mariadb:sungmiki.v1.0
+    image: mariadb:sungmiki
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
       MYSQL_DATABASE: ${DB_NAME}
@@ -30,7 +30,7 @@ services:
     build:
       context: ./requirements/wordpress
       dockerfile: Dockerfile
-    image: wordpress:sungmiki.v1.0
+    image: wordpress:sungmiki
     depends_on:
       - mariadb
     environment:
@@ -49,13 +49,13 @@ services:
     build:
       context: ./requirements/nginx
       dockerfile: Dockerfile
-    image: nginx:sungmiki.v1.0
+    image: nginx:sungmiki
     depends_on:
       - wordpress
     volumes:
-      - wp_content:/usr/share/nginx/html
+      - wp_content:/var/www/html/
     ports:
-      - "8080:8080"
+      - "443:443"
     networks:
       - wp_network
     restart: always

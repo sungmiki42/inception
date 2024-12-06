@@ -4,8 +4,9 @@ FROM debian:bullseye
 # Update package list and install necessary packages
 RUN apt-get update && \
     apt-get upgrade && \
-    apt-get install -y  php7.4-fpm \
-                        php7.4-mysql \
+    apt-get install -y  php-fpm \
+                        php-mysql \
+                        php \
                         # mariadb-client \
                         curl \
                         unzip \
@@ -39,7 +40,8 @@ RUN cd /tmp && \
     chown -R www-data:www-data /var/www/html/ && \
     chmod -R 755 /var/www/html/
     
-RUN mkdir /run/php 
+RUN mkdir /run/php && \
+    chown -R www-data:www-data /run/php
 
 # Entrypoint setting
 ENTRYPOINT [ "/usr/bin/tini", "--", "init-wp.sh" ]

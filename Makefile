@@ -16,7 +16,7 @@ IMAGES := $(addsuffix :sungmiki.v1.0, $(SERVICES))
 # Docker Compose up
 up:
 	@echo "Starting all services with Docker Compose..."
-	docker-compose -f $(COMPOSE_FILE) up -d
+	docker-compose -f $(COMPOSE_FILE) up -d --build
 
 # Docker Compose down
 down:
