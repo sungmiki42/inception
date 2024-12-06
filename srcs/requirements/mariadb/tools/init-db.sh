@@ -8,6 +8,8 @@ DB_NAME=${MYSQL_DATABASE:-"default_db"}
 DB_USER=${MYSQL_USER:-"default_user"}
 DB_PASSWORD=${MYSQL_PASSWORD:-"default_password"}
 
+apt-get install mariadb-server mariadb-client
+
 # MariaDB 서비스를 시작 (Debian에서 사용되는 명령)
 service mariadb start
 

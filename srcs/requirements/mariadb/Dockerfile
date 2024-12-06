@@ -11,7 +11,7 @@ FROM debian:bullseye
 # Update package list and install necessary packages
 RUN apt-get update && \
     apt-get upgrade && \
-    apt-get install -y mariadb-server mariadb-client tini &&\
+    apt-get install -y mariadb-server tini vim &&\
     apt-get clean
 
 # Copy custom MariaDB configuration if needed (optional)
@@ -25,12 +25,12 @@ RUN chmod +x /usr/local/bin/init-db.sh
 EXPOSE 3306
 
 # Run initial setup commands
-# RUN service mariadb start && \
-#     mysql -e "CREATE DATABASE IF NOT EXISTS ${DB_NAME};" && \
-#     mysql -e "CREATE USER IF NOT EXISTS '${DB_USER}'@'%' IDENTIFIED BY '${DB_PASSWORD}';" && \
-#     mysql -e "GRANT ALL PRIVILEGES ON ${DB_NAME}.* TO '${DB_USER}'@'%';" && \
-#     mysql -e "FLUSH PRIVILEGES;"
+RUN service mariadb start && \
+    mysql -e "CREATE DATABASE IF NOT EXISTS wordpress_db;" && \
+    mysql -e "CREATE USER IF NOT EXISTS 'sungmiki'@'%' IDENTIFIED BY 'sungmiki';" && \
+    mysql -e "GRANT ALL PRIVILEGES ON wordpress_db.* TO 'sungmiki'@'%';" && \
+    mysql -e "FLUSH PRIVILEGES;"
 
 # Set the entrypoint to run MariaDB in the foreground
-ENTRYPOINT [ "/usr/bin/tini", "--", "init-db.sh" ]
+# ENTRYPOINT [ "/usr/bin/tini", "--", "init-db.sh" ]
 CMD ["mysqld", "--bind-address=0.0.0.0"]

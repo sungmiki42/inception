@@ -4,21 +4,23 @@ FROM debian:bullseye
 # Update package list and install necessary packages
 RUN apt-get update && \
     apt-get upgrade && \
-    apt-get install -y  wordpress \
-                        php7.4-fpm \
+    apt-get install -y  php7.4-fpm \
                         php7.4-mysql \
-                        mariadb-client \
+                        # mariadb-client \
                         curl \
                         unzip \
                         tini \
-                        wget && \
+                        wget \
+                        vim \
+                        openssl && \
     apt-get clean 
     # && rm -rf /var/lib/apt/lists/*
 
 # COPY wp-config.php
-COPY ./conf/wp-config.php /var/www/html/wp-config.php
+COPY ./conf/wp-config.php /tmp/wp-config.php
+RUN chown -R www-data:www-data /tmp/wp-config.php
 # COPY www.conf
-COPY ./conf/www.conf /etc/php/7.4/fpm/pool.d
+COPY ./conf/www.conf /tmp/pool.d/www.conf
 # COPY init-wp.sh
 COPY ./tools/init-wp.sh /usr/local/bin/init-wp.sh
 RUN chmod +x /usr/local/bin/init-wp.sh
