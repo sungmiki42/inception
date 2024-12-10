@@ -2,21 +2,17 @@ SRC_DIR := ./srcs
 REQUIREMENTS_DIR := $(SRC_DIR)/requirements
 COMPOSE_FILE := $(SRC_DIR)/docker-compose.yml
 SERVICES := mariadb wordpress nginx
-IMAGES := $(addsuffix :sungmiki.v1.0, $(SERVICES))
-
-# build each image
-# build-%:
-# 	@echo "Building image for service: $*"
-# 	docker build -t $* $(REQUIREMENTS_DIR)/$*
-
-# # build every images
-# build: $(SERVICES:%=build-%)
-# 	@echo "All images built successfully."
+TAG := sungmiki
+IMAGES := $(addsuffix :$(TAG), $(SERVICES))
 
 # Docker Compose up
 up:
 	@echo "Starting all services with Docker Compose..."
 	docker-compose -f $(COMPOSE_FILE) up -d --build
+
+forward:
+	@echo "Starting all services with Docker Compose..."
+	docker-compose -f $(COMPOSE_FILE) up --build
 
 # Docker Compose down
 down:
@@ -27,23 +23,32 @@ down:
 clean:
 	@echo "Stopping all services and cleaning up..."
 	docker-compose -f $(COMPOSE_FILE) down --volumes --remove-orphans
+
+clean-img:	
 	docker image rm $(IMAGES)
+
+clean-data:
+	sudo rm -rf /home/sungmiki/data/mariadb/*
 	sudo rm -rf /home/sungmiki/data/wordpress/*
+
+fclean: clean clean-img clean-data
 
 # build every images and run containers
 all: up
 
-re: clean
+re: clean clean-img
 	make up
 
 # print makefile cmds
 help:
 	@echo "Makefile targets:"
-	# @echo "  build         Build Docker images for all services"
-	# @echo "  build-<name>  Build Docker image for a specific service (e.g., make build-mariadb)"
 	@echo "  up            Start all services using Docker Compose"
+	@echo "  forward       Start all services using Docker Compose in forward mode"
 	@echo "  down          Stop all services"
-	@echo "  clean         Stop all services and remove volumes, networks, etc."
+	@echo "  clean         Stop all services and remove volumes, networks, imgs."
+	@echo "  clean-img     Remove Docker images."
+	@echo "  clean-data    Remove database and wordpress data"
+	@echo "  fclean        Stop all services and remove volumes, networks, imgs and all data."
 	@echo "  all           Build all images and start services"
-	@echo "  re            Stop all services and remove volumes, networks, etc. And build all images and start services again."
+	@echo "  re            Make clean and make clean-img, then make up"
 	@echo "  help          Display this help message"

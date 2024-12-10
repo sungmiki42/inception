@@ -6,19 +6,10 @@ services:
     build:
       context: ./requirements/mariadb
       dockerfile: Dockerfile
-      # args:
-      #   ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
-      #   DB_NAME: ${DB_NAME}
-      #   DB_USER: ${DB_USER}
-      #   DB_PASSWORD: ${DB_PASSWORD}
     image: mariadb:sungmiki
-    environment:
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${DB_NAME}
-      MYSQL_USER: ${DB_USER}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
+    env_file:
+      - .env
     volumes:
-      # - /home/sungmiki/data/mariadb:/var/lib/mysql
       - db_data:/var/lib/mysql
     networks:
       - wp_network
@@ -33,11 +24,8 @@ services:
     image: wordpress:sungmiki
     depends_on:
       - mariadb
-    environment:
-      WORDPRESS_DB_HOST: ${DB_HOST}
-      WORDPRESS_DB_NAME: ${DB_NAME}
-      WORDPRESS_DB_USER: ${DB_USER}
-      WORDPRESS_DB_PASSWORD: ${DB_PASSWORD}
+    env_file:
+      - .env
     volumes:
       - wp_content:/var/www/html/
     networks:
@@ -76,3 +64,4 @@ volumes:
 
 networks:
   wp_network:
+    driver: bridge

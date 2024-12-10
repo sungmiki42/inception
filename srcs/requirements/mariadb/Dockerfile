@@ -25,12 +25,12 @@ RUN chmod +x /usr/local/bin/init-db.sh
 EXPOSE 3306
 
 # Run initial setup commands
-RUN service mariadb start && \
-    mysql -e "CREATE DATABASE IF NOT EXISTS wordpress_db;" && \
-    mysql -e "CREATE USER IF NOT EXISTS 'sungmiki'@'%' IDENTIFIED BY 'sungmiki';" && \
-    mysql -e "GRANT ALL PRIVILEGES ON wordpress_db.* TO 'sungmiki'@'%';" && \
-    mysql -e "FLUSH PRIVILEGES;"
+# RUN service mariadb start && \
+#     mysql -e "CREATE DATABASE IF NOT EXISTS wordpress_db;" && \
+#     mysql -e "CREATE USER IF NOT EXISTS 'sungmiki'@'%' IDENTIFIED BY 'sungmiki';" && \
+#     mysql -e "GRANT ALL PRIVILEGES ON wordpress_db.* TO 'sungmiki'@'%';" && \
+#     mysql -e "FLUSH PRIVILEGES;"
 
 # Set the entrypoint to run MariaDB in the foreground
-# ENTRYPOINT [ "/usr/bin/tini", "--", "init-db.sh" ]
+ENTRYPOINT [ "/usr/bin/tini", "--", "init-db.sh" ]
 CMD ["mysqld", "--bind-address=0.0.0.0"]

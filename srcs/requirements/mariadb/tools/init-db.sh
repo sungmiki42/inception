@@ -8,8 +8,6 @@ DB_NAME=${MYSQL_DATABASE:-"default_db"}
 DB_USER=${MYSQL_USER:-"default_user"}
 DB_PASSWORD=${MYSQL_PASSWORD:-"default_password"}
 
-apt-get install mariadb-server mariadb-client
-
 # MariaDB 서비스를 시작 (Debian에서 사용되는 명령)
 service mariadb start
 
@@ -19,12 +17,13 @@ echo "Database Name: $DB_NAME"
 echo "User: $DB_USER"
 echo "Password: $DB_PASSWORD"
 
-mysql -uroot -e "CREATE DATABASE IF NOT EXISTS \`${DB_NAME}\`;"
-mysql -uroot -e "CREATE USER IF NOT EXISTS '${DB_USER}'@'%' IDENTIFIED BY '${DB_PASSWORD}';"
-mysql -uroot -e "GRANT ALL PRIVILEGES ON \`${DB_NAME}\`.* TO '${DB_USER}'@'%';"
-mysql -uroot -e "FLUSH PRIVILEGES;"
+mysql -e "CREATE DATABASE IF NOT EXISTS \`${DB_NAME}\`;"
+mysql -e "CREATE USER IF NOT EXISTS '${DB_USER}'@'%' IDENTIFIED BY '${DB_PASSWORD}';"
+mysql -e "GRANT ALL PRIVILEGES ON \`${DB_NAME}\`.* TO '${DB_USER}'@'%';"
+mysql -e "FLUSH PRIVILEGES;"
 
 echo "MariaDB initialization completed successfully."
+
 
 # MariaDB 서비스 중단 (컨테이너 실행 중이라면 제외 가능)
 service mariadb stop
