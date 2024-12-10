@@ -2,7 +2,7 @@
 
 set -e
 
-# `wp-config.php`가 없으면 설치 진행
+# wp-config.php가 없으면 파일 생성후 설정
 if [ ! -f "/var/www/html/wp-config.php" ]; then
     echo "wp-config.php being created..."
 
@@ -12,17 +12,17 @@ if [ ! -f "/var/www/html/wp-config.php" ]; then
     sed -i "s/password_here/$WORDPRESS_DB_PASSWORD/g" /var/www/html/wp-config.php
     sed -i "s/localhost/$WORDPRESS_DB_HOST/g" /var/www/html/wp-config.php
     sed -i "s/database_name_here/$WORDPRESS_DB_NAME/g" /var/www/html/wp-config.php
-    
+
     echo "wp-config.php is created successfully."
 else
-    echo "wp-config.php is already created." 
+    echo "wp-config.php is already created."
 fi
 
-# wordpress 가 없으면 설치 진행
+# wordpress 설치되어 있지 않으면 설치 진행
 if ! wp core is-installed --path="/var/www/html" --allow-root; then
     echo "WordPress not installed. Setting up..."
 
-    #wordpress 설치 
+    #wordpress 설치
     wp core install \
         --url="https://localhost" \
         --title=${WORDPRESS_SITE_TITLE} \
@@ -31,6 +31,7 @@ if ! wp core is-installed --path="/var/www/html" --allow-root; then
         --admin_email=${WORDPRESS_ADMIN_EMAIL} \
         --path="/var/www/html" \
         --allow-root
+
     #wordpress user 생성
     wp user create $WORDPRESS_USER $WORDPRESS_USER_EMAIL \
 					--user_pass=$WORDPRESS_PASSWORD \
@@ -39,9 +40,7 @@ if ! wp core is-installed --path="/var/www/html" --allow-root; then
 
     echo "WordPress installed successfully."
 else
-    echo "WordPress already installed." 
+    echo "WordPress already installed."
 fi
 
-
-# exec CMD
 exec "$@"
